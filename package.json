@@ -1,0 +1,14 @@
+{
+  "name": "anas-vault",
+  "version": "1.0.0",
+  "description": "7-Bot Army System",
+  "main": "index.js",
+  "dependencies": {
+    "telegraf": "^4.15.3",
+    "express": "^4.18.2",
+    "axios": "^1.6.0"
+  },
+  "scripts": {
+    "start": "node index.js"
+  }
+}
