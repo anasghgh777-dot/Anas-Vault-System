@@ -1,17 +1,20 @@
 const puppeteer = require('puppeteer');
 
 async function scrapeShamCash() {
-    const browser = await puppeteer.launch({ headless: true });
+    const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox'] });
     const page = await browser.newPage();
     
-    // التوجه لرابط شام كاش (أو الصفحة المحددة للتحديثات)
-    await page.goto('رابط_صفحة_التحديثات_في_شام_كاش', { waitUntil: 'networkidle2' });
+    console.log("جاري الاتصال بـ شام كاش...");
+    await page.goto('https://shamcash.com', { waitUntil: 'networkidle2' });
 
-    // قشط البيانات المطلوبة (مثلاً سعر أو إشعار)
     const data = await page.evaluate(() => {
-        return document.querySelector('.selector-class-name').innerText; // هنا نضع كلاس العنصر المطلوب
+        // هنا سنضع "الكلاس" الخاص بالبيانات التي تريد قشطها
+        return document.body.innerText; 
     });
 
+    console.log("تم جلب البيانات:", data);
     await browser.close();
     return data;
 }
+
+scrapeShamCash();
