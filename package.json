@@ -1,9 +1,13 @@
 {
   "name": "anas-vault-system",
   "version": "1.0.0",
-  "main": "handler.js",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
   "dependencies": {
     "puppeteer": "^22.0.0",
+    "telegraf": "^4.15.0",
     "axios": "^1.6.0"
   }
 }
