@@ -1,31 +1,17 @@
-// handler.js - معالج الأوامر والطلب للـ Proxy
-const axios = require('axios');
+const puppeteer = require('puppeteer');
 
-async function handleCodeGeneration(prompt, options = {}) {
-    const apiKey = process.env.OPENROUTER_API_KEY;
-    const model = process.env.DEFAULT_MODEL || 'deepseek/deepseek-r1-distill-llama-70b';
+async function scrapeShamCash() {
+    const browser = await puppeteer.launch({ headless: true });
+    const page = await browser.newPage();
+    
+    // التوجه لرابط شام كاش (أو الصفحة المحددة للتحديثات)
+    await page.goto('رابط_صفحة_التحديثات_في_شام_كاش', { waitUntil: 'networkidle2' });
 
-    if (!apiKey) {
-        throw new Error('خطأ: مفتاح API غير معرف في ملف الـ .env');
-    }
+    // قشط البيانات المطلوبة (مثلاً سعر أو إشعار)
+    const data = await page.evaluate(() => {
+        return document.querySelector('.selector-class-name').innerText; // هنا نضع كلاس العنصر المطلوب
+    });
 
-    try {
-        console.log(`[Proxy] جاري المعالجة بنموذج: ${model}`);
-        const response = await axios.post('https://openrouter.ai/api/v1/chat/completions', {
-            model: model,
-            messages: [
-                { role: 'system', content: 'أنت مساعد برمجى محترف داخل بيئة VS Code.' },
-                { role: 'user', content: prompt }
-            ],
-            temperature: options.temperature || 0.2
-        }, {
-            headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' }
-        });
-
-        return { success: true, code: response.data.choices[0].message.content, model };
-    } catch (error) {
-        return { success: false, error: error.message };
-    }
+    await browser.close();
+    return data;
 }
-
-module.exports = { handleCodeGeneration };
